@@ -1,5 +1,3 @@
-#[cfg(feature = "read-initializer")]
-use std::mem::MaybeUninit;
 use std::ops::{Deref, DerefMut};
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -257,54 +255,21 @@ impl<R: AsyncRead + Unpin> MsgPackFuture<R> {
     }
 
     async fn read_2(&mut self) -> IoResult<[u8; 2]> {
-        #[cfg(feature = "read-initializer")]
-        #[allow(clippy::uninit_assumed_init)]
-        unsafe {
-            let mut val = MaybeUninit::<[u8; 2]>::uninit().assume_init();
-            self.reader.initializer().initialize(&mut val[..]);
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
-        #[cfg(not(feature = "read-initializer"))]
-        {
-            let mut val = [0; 2];
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
+        let mut val = [0; 2];
+        self.reader.read_exact(&mut val[..]).await?;
+        Ok(val)
     }
 
     async fn read_4(&mut self) -> IoResult<[u8; 4]> {
-        #[cfg(feature = "read-initializer")]
-        #[allow(clippy::uninit_assumed_init)]
-        unsafe {
-            let mut val = MaybeUninit::<[u8; 4]>::uninit().assume_init();
-            self.reader.initializer().initialize(&mut val);
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
-        #[cfg(not(feature = "read-initializer"))]
-        {
-            let mut val = [0; 4];
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
+        let mut val = [0; 4];
+        self.reader.read_exact(&mut val[..]).await?;
+        Ok(val)
     }
 
     async fn read_8(&mut self) -> IoResult<[u8; 8]> {
-        #[cfg(feature = "read-initializer")]
-        #[allow(clippy::uninit_assumed_init)]
-        unsafe {
-            let mut val = MaybeUninit::<[u8; 8]>::uninit().assume_init();
-            self.reader.initializer().initialize(&mut val);
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
-        #[cfg(not(feature = "read-initializer"))]
-        {
-            let mut val = [0; 8];
-            self.reader.read_exact(&mut val[..]).await?;
-            Ok(val)
-        }
+        let mut val = [0; 8];
+        self.reader.read_exact(&mut val[..]).await?;
+        Ok(val)
     }
 
     fn read_u8(&mut self) -> impl Future<Output = IoResult<u8>> + '_ {

@@ -9,7 +9,7 @@ readme = "README.md"
 license = "MIT OR Apache-2.0"
 keywords = ["msgpack", "MessagePack"]
 categories = ["encoding", "asynchronous"]
-edition = "2018"
+edition = "2024"
 
 [dependencies]
 byteorder = "1.5"
@@ -21,7 +21,7 @@ rmpv = "1.3"
 slab = "0.4"
 
 [dev-dependencies]
-async-std = { version = "1.5.0", features = ["attributes"] }
+async-std = { version = "1.13.2", features = ["attributes"] }
 
 [profile.release]
 lto = true

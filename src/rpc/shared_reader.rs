@@ -3,7 +3,7 @@ use std::pin::Pin;
 use std::sync::Mutex;
 use std::task::{Context, Poll};
 
-use futures::channel::oneshot::{channel, Receiver, Sender};
+use futures::channel::oneshot::{Receiver, Sender, channel};
 use futures::future::Either;
 use futures::io::Result as IoResult;
 use futures::prelude::*;
@@ -198,10 +198,10 @@ impl<R: AsyncRead + Unpin + Send + 'static> RequestDispatch<R> {
 
             stream = match next {
                 RpcMessage::Request(req) => {
-                    break RpcIteration::Some(RpcIncomingMessage::Request(req))
+                    break RpcIteration::Some(RpcIncomingMessage::Request(req));
                 }
                 RpcMessage::Notify(nfy) => {
-                    break RpcIteration::Some(RpcIncomingMessage::Notify(nfy))
+                    break RpcIteration::Some(RpcIncomingMessage::Notify(nfy));
                 }
                 RpcMessage::Response(rsp) => self.dispatch_one(rsp).await?,
             }
@@ -317,7 +317,7 @@ pub enum RpcIteration<R> {
     None(R),
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
 

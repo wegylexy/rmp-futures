@@ -19,7 +19,7 @@ impl<W: AsyncWrite + Unpin> SharedRpcSink<W> {
         }
     }
 
-    pub fn lock(&self) -> impl Future<Output = RpcSink<RpcMutexGuard<W>>> {
+    pub fn lock(&self) -> impl Future<Output = RpcSink<RpcMutexGuard<'_, W>>> {
         // Lock the writer and wrap it in an RpcSink
         self.writer.lock().map(RpcMutexGuard).map(RpcSink::new)
     }

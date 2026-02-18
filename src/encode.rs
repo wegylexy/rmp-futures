@@ -212,10 +212,7 @@ fn efficient_u64() {
         EfficientInt::from(4_294_967_296u64),
         EfficientInt::U64(4_294_967_296)
     );
-    assert_eq!(
-        EfficientInt::from(std::u64::MAX),
-        EfficientInt::U64(std::u64::MAX)
-    );
+    assert_eq!(EfficientInt::from(u64::MAX), EfficientInt::U64(u64::MAX));
 }
 
 #[test]
@@ -246,10 +243,7 @@ fn efficient_i64() {
         EfficientInt::from(4_294_967_296i64),
         EfficientInt::U64(4_294_967_296)
     );
-    assert_eq!(
-        EfficientInt::from(std::i64::MIN),
-        EfficientInt::I64(std::i64::MIN)
-    );
+    assert_eq!(EfficientInt::from(i64::MIN), EfficientInt::I64(i64::MIN));
 }
 
 #[must_use = "dropping the writer may leave the message unfinished"]
@@ -406,7 +400,7 @@ impl<W: AsyncWrite + Unpin> MsgPackWriter<W> {
     }
 
     pub async fn write_array_len(mut self, len: u32) -> IoResult<ArrayFuture<W>> {
-        const U16MAX: u32 = std::u16::MAX as u32;
+        const U16MAX: u32 = u16::MAX as u32;
 
         match len {
             0..=15 => self.write_marker(Marker::FixArray(len as u8)).await,
@@ -426,7 +420,7 @@ impl<W: AsyncWrite + Unpin> MsgPackWriter<W> {
     }
 
     pub async fn write_map_len(mut self, len: u32) -> IoResult<MapFuture<W>> {
-        const U16MAX: u32 = std::u16::MAX as u32;
+        const U16MAX: u32 = u16::MAX as u32;
 
         match len {
             0..=15 => self.write_marker(Marker::FixMap(len as u8)).await,
@@ -972,7 +966,7 @@ mod tests {
 
     #[test]
     fn array_len() {
-        for i in &[0, 1, 15, 16, 65535, 65536, std::u32::MAX] {
+        for i in &[0, 1, 15, 16, 65535, 65536, u32::MAX] {
             test_jig(|c1, msg| {
                 rmp::encode::write_array_len(c1, *i).unwrap();
                 (None, run_future(msg.write_array_len(*i)).unwrap().writer)
@@ -992,7 +986,7 @@ mod tests {
 
     #[test]
     fn map_len() {
-        for i in &[0, 1, 15, 16, 65535, 65536, std::u32::MAX] {
+        for i in &[0, 1, 15, 16, 65535, 65536, u32::MAX] {
             test_jig(|c1, msg| {
                 rmp::encode::write_map_len(c1, *i).unwrap();
                 (None, run_future(msg.write_map_len(*i)).unwrap().writer)
@@ -1019,7 +1013,7 @@ mod tests {
 
     #[test]
     fn bin() {
-        for i in &[0, 1, 255, 256, 65535, 65536, std::u32::MAX] {
+        for i in &[0, 1, 255, 256, 65535, 65536, u32::MAX] {
             test_jig(|c1, msg| {
                 rmp::encode::write_bin_len(c1, *i).unwrap();
                 (None, run_future(msg.write_bin_len(*i)).unwrap())
@@ -1037,7 +1031,7 @@ mod tests {
 
     #[test]
     fn ext() {
-        for i in &[0, 1, 2, 4, 8, 16, 17, 255, 256, 65535, 65536, std::u32::MAX] {
+        for i in &[0, 1, 2, 4, 8, 16, 17, 255, 256, 65535, 65536, u32::MAX] {
             test_jig(|c1, msg| {
                 rmp::encode::write_ext_meta(c1, *i, 42).unwrap();
                 (None, run_future(msg.write_ext_meta(*i, 42)).unwrap())
@@ -1047,7 +1041,7 @@ mod tests {
 
     #[test]
     fn string() {
-        for i in &[0, 1, 31, 32, 255, 256, 65535, 65536, std::u32::MAX] {
+        for i in &[0, 1, 31, 32, 255, 256, 65535, 65536, u32::MAX] {
             test_jig(|c1, msg| {
                 rmp::encode::write_str_len(c1, *i).unwrap();
                 (None, run_future(msg.write_str_len(*i)).unwrap())
@@ -1101,7 +1095,7 @@ mod tests {
         test_against_rmpv(65536u64);
         test_against_rmpv(4_294_967_295u64);
         test_against_rmpv(4_294_967_296u64);
-        test_against_rmpv(std::u64::MAX);
+        test_against_rmpv(u64::MAX);
     }
 
     #[test]
@@ -1166,6 +1160,6 @@ mod tests {
         test_against_rmpv(-2_147_483_649i64);
         test_against_rmpv(4_294_967_295i64);
         test_against_rmpv(4_294_967_296i64);
-        test_against_rmpv(std::i64::MIN);
+        test_against_rmpv(i64::MIN);
     }
 }

@@ -1,17 +1,16 @@
 use async_std::net::{TcpListener, TcpStream};
+use futures::StreamExt;
 use futures::io::AsyncRead;
 use futures::io::AsyncReadExt;
 use futures::io::AsyncWrite;
 use futures::lock::Mutex;
-use futures::StreamExt;
-use std::io;
-use std::sync::Arc;
-
+use rmp_futures::rpc::MsgId;
 use rmp_futures::rpc::decode::RpcMessage;
 use rmp_futures::rpc::decode::RpcParamsFuture;
 use rmp_futures::rpc::decode::RpcStream;
 use rmp_futures::rpc::encode::RpcSink;
-use rmp_futures::rpc::MsgId;
+use std::io;
+use std::sync::Arc;
 
 async fn hello_handler<W, R>(id: MsgId, w: Arc<Mutex<Option<W>>>, params: RpcParamsFuture<R>) -> R
 where

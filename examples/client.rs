@@ -5,10 +5,10 @@ use futures::task::LocalSpawnExt;
 use std::io;
 use std::sync::Arc;
 
-use rmp_futures::rpc::decode::RpcStream;
-use rmp_futures::rpc::encode::RpcSink;
 use rmp_futures::rpc::RequestDispatch;
 use rmp_futures::rpc::ResponseReceiver;
+use rmp_futures::rpc::decode::RpcStream;
+use rmp_futures::rpc::encode::RpcSink;
 
 fn main() -> io::Result<()> {
     let mut pool = LocalPool::new();
